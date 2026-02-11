@@ -25,7 +25,7 @@ public class ProductService implements InterfaceGlobal<Product> {
     }
 
     
-    public void add2(Product p) {
+    public boolean add(Product p) {
         String req = "INSERT INTO `product`(`category`, `price`, `description`, `createdAt`)" +
                 " VALUES (?,?,?,?)";
         try {
@@ -36,9 +36,12 @@ public class ProductService implements InterfaceGlobal<Product> {
             ps.setTimestamp(4, Timestamp.valueOf(p.getCreatedAt()));
             ps.executeUpdate();
             System.out.println("Produit ajoutée avec succes 2");
+            return true;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return false;
         }
+
     }
 
 
