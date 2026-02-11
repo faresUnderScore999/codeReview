@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="/Styles/StyleProduct.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controlleurs.ProductControlleur.ProductManagerGUI">
+    <!-- Header Section -->
+    <VBox alignment="CENTER" layoutX="0.0" layoutY="0.0" prefHeight="80.0" prefWidth="800.0" styleClass="header" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label styleClass="header-title" text="Gestion des Produits">
+            <font>
+                <Font name="System Bold">
+                    <size>24.0</size>
+                </Font>
+            </font>
+        </Label>
+    </VBox>
+
+    <!-- Main Form Section -->
+    <ScrollPane fitToWidth="true" layoutY="80.0" prefHeight="554.0" prefWidth="800.0" AnchorPane.bottomAnchor="-34.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0">
+        <VBox spacing="20.0" styleClass="form-container">
+            <padding>
+                <Insets bottom="30.0" left="50.0" right="50.0" top="30.0" />
+            </padding>
+
+
+            <!-- Category -->
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="form-label" text="Catégorie *" />
+                    <ComboBox fx:id="categoryComboBox" prefWidth="300.0" promptText="Sélectionner une catégorie" styleClass="form-input">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="COMPTE_COURANT" />
+                                <String fx:value="COMPTE_EPARGNE" />
+                                <String fx:value="COMPTE_PREMIUM" />
+                                <String fx:value="COMPTE_JEUNE" />
+                                <String fx:value="COMPTE_ENTREPRISE" />
+                                <String fx:value="CARTE_DEBIT" />
+                                <String fx:value="CARTE_CREDIT" />
+                                <String fx:value="CARTE_PREMIUM" />
+                                <String fx:value="CARTE_VIRTUELLE" />
+                                <String fx:value="EPARGNE_CLASSIQUE" />
+                                <String fx:value="EPARGNE_LOGEMENT" />
+                                <String fx:value="DEPOT_A_TERME" />
+                                <String fx:value="PLACEMENT_INVESTISSEMENT" />
+                                <String fx:value="ASSURANCE_VIE" />
+                                <String fx:value="ASSURANCE_HABITATION" />
+                                <String fx:value="ASSURANCE_VOYAGE" />
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                </VBox>
+            </HBox>
+
+            <!-- Price -->
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="form-label" text="Prix (€) *" />
+                    <TextField fx:id="priceField" promptText="0.00" styleClass="form-input" />
+                </VBox>
+            </HBox>
+
+            <!-- Description -->
+            <HBox alignment="TOP_LEFT" spacing="10.0">
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                    <Label styleClass="form-label" text="Description *" />
+                    <TextArea fx:id="descriptionArea" prefHeight="120.0" promptText="Entrez la description du produit (max 500 caractères)" styleClass="form-input" wrapText="true" />
+                    <Label fx:id="charCountLabel" styleClass="char-count" text="0/500 caractères" />
+                </VBox>
+            </HBox>
+            <!-- Buttons Section -->
+            <HBox alignment="CENTER" spacing="20.0" styleClass="button-container">
+                <padding>
+                    <Insets top="20.0" />
+                </padding>
+
+                <Button fx:id="saveButton" onAction="#CreateProduct" prefWidth="150.0" styleClass="btn-primary" text="Enregistrer">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Button>
+                <Button fx:id="clearButton" onAction="#handleClear" prefWidth="150.0" styleClass="btn-secondary" text="Réinitialiser">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Button>
+            </HBox>
+
+        </VBox>
+    </ScrollPane>
+
+</AnchorPane>
