@@ -1,5 +1,9 @@
 package org.example.Utils;
 
+import org.example.Model.Product.ClassProduct.ProductSubscription;
+import org.example.Model.Product.ClassProduct.Product;
+
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -41,69 +45,17 @@ public class MaConnexion {
 
         try {
             cnx = DriverManager.getConnection(URL, USR, PWD);
-
             try (Statement st = cnx.createStatement()) {
 
-                // =============================
-                // 1️⃣ PRODUCT TABLE
-                // =============================
-                String productTable = """
-                CREATE TABLE IF NOT EXISTS product (
-                  productId INT NOT NULL AUTO_INCREMENT,
-                  category ENUM(
-                    'COMPTE_COURANT',
-                    'COMPTE_EPARGNE',
-                    'COMPTE_PREMIUM',
-                    'COMPTE_JEUNE',
-                    'COMPTE_ENTREPRISE',
-                    'CARTE_DEBIT',
-                    'CARTE_CREDIT',
-                    'CARTE_PREMIUM',
-                    'CARTE_VIRTUELLE',
-                    'EPARGNE_CLASSIQUE',
-                    'EPARGNE_LOGEMENT',
-                    'DEPOT_A_TERME',
-                    'PLACEMENT_INVESTISSEMENT',
-                    'ASSURANCE_VIE',
-                    'ASSURANCE_HABITATION',
-                    'ASSURANCE_VOYAGE'
-                  ) NOT NULL DEFAULT 'COMPTE_COURANT',
-                  price DOUBLE NOT NULL,
-                  description VARCHAR(500) NOT NULL,
-                  createdAt DATE NOT NULL,
-                  PRIMARY KEY (productId)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-                """;
+                //PRODUCT TABLE
+                st.executeUpdate(Product.SQLTable());
 
-                st.executeUpdate(productTable);
-                // =============================
-                // 2️⃣ PRODUCT SUBSCRIPTION TABLE
-                // =============================
-                String subscriptionTable = """
-                CREATE TABLE IF NOT EXISTS productsubscription (
-                  subscriptionId INT NOT NULL AUTO_INCREMENT,
-                  client INT NOT NULL,
-                  product INT NOT NULL,
-                  type ENUM('MONTHLY', 'ANNUAL', 'TRANSACTION', 'ONE_TIME') NOT NULL,
-                  subscriptionDate DATE NOT NULL,
-                  expirationDate DATE NOT NULL,
-                  status ENUM('DRAFT', 'ACTIVE', 'SUSPENDED', 'CLOSED') NOT NULL,
-                  PRIMARY KEY (subscriptionId),
-                  KEY fk_subscription_product (product),
-                  CONSTRAINT fk_subscription_product
-                    FOREIGN KEY (product)
-                    REFERENCES product (productId)
-                    ON DELETE CASCADE
-                    ON UPDATE CASCADE
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-                """;
-
-                st.executeUpdate(subscriptionTable);
+                //PRODUCT SUBSCRIPTION TABLE
+                st.executeUpdate(ProductSubscription.SQLTable());
 
                 System.out.println("Tables checked/created successfully.");
 
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
