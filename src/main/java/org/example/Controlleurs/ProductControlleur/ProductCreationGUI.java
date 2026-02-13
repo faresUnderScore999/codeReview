@@ -2,13 +2,19 @@ package org.example.Controlleurs.ProductControlleur;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import org.example.Model.Product.ClassProduct.Product;
-import org.example.Interfaces.InterfaceGlobal;
 import org.example.Model.Product.EnumProduct.ProductCategory;
 import org.example.Service.ProductService.ProductService;
 
-public class ProductManagerGUI {
+import java.io.IOException;
+
+public class ProductCreationGUI {
 
     // Form Fields
     @FXML
@@ -18,6 +24,23 @@ public class ProductManagerGUI {
     @FXML
     private TextArea descriptionArea;
 
+
+    @FXML
+    private void goBackToList(ActionEvent event) {
+
+        try {
+            Parent root = FXMLLoader.load(
+                    getClass().getResource("/Product/ListeProductGUI.fxml")
+            );
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Liste Produits");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public void CreateProduct(ActionEvent actionEvent) {
         if (validateInput()) {
             try {
@@ -91,4 +114,5 @@ public class ProductManagerGUI {
         priceField.clear();
         descriptionArea.clear();
     }
+
 }

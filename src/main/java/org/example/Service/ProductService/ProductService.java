@@ -13,14 +13,23 @@ public class ProductService implements InterfaceGlobal<Product> {
     Connection cnx = MaConnexion.getInstance().getCnx();
     @Override
     public void Add(Product p) {
-        String req = "INSERT INTO `product`(`category`, `price`, `description`, `createdAt`) " +
-                "VALUES ('"+p.getCategory()+"','"+p.getPrice()+"','"+p.getDescription()+"','"+p.getCreatedAt()+"')";
-        try {
-            Statement st = cnx.createStatement();
-            st.executeUpdate(req);
-            System.out.println("Produit ajoutee avec succes!");
+
+        String req = "INSERT INTO product (category, price, description, createdAt) " +
+                "VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+
+            ps.setString(1, p.getCategory().name());
+            ps.setDouble(2, p.getPrice());
+            ps.setString(3, p.getDescription());
+            ps.setTimestamp(4, Timestamp.valueOf(p.getCreatedAt()));
+
+            ps.executeUpdate();
+
+            System.out.println("Produit ajouté avec succès!");
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -55,6 +64,20 @@ public class ProductService implements InterfaceGlobal<Product> {
             System.out.println("Produit Supprimer avec succes");
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public boolean delete(Integer id) {
+        String req = "DELETE FROM `product` WHERE productId = ?";
+        try {
+            PreparedStatement ps = cnx.prepareStatement(req);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            System.out.println("Produit Supprimer avec succes");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
