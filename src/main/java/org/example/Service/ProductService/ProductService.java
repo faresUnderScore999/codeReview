@@ -33,7 +33,7 @@ public class ProductService implements InterfaceGlobal<Product> {
         }
     }
 
-    
+
     public boolean add(Product p) {
         String req = "INSERT INTO `product`(`category`, `price`, `description`, `createdAt`)" +
                 " VALUES (?,?,?,?)";
@@ -142,25 +142,26 @@ public class ProductService implements InterfaceGlobal<Product> {
 
     @Override
     public Product ReadId(Integer id) {
-        Product p = new Product();
-        String req = "SELECT * FROM `product`  WHERE productId = ?";
-        try {
-            Statement st = cnx.createStatement();
-            PreparedStatement ps = cnx.prepareStatement(req);
-            ps.setInt(1, id);
-            ResultSet res = st.executeQuery(req);
-            while (res.next()){
-                p.setProductId(res.getInt(1));
-                p.setCategory(ProductCategory.valueOf(res.getString(2)));
-                p.setPrice(res.getDouble(3));
-                p.setDescription(res.getString(4));
-                p.setCreatedAt(res.getTimestamp(5).toLocalDateTime());
-            }
 
+        String req = "SELECT * FROM product WHERE productId = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+            ps.setInt(1, id);
+            try (ResultSet res = ps.executeQuery()) {
+
+                if (res.next()) {
+                    Product p = new Product();
+                    p.setProductId(res.getInt("productId"));
+                    p.setCategory(ProductCategory.valueOf(res.getString("category")));
+                    p.setPrice(res.getDouble("price"));
+                    p.setDescription(res.getString("description"));
+                    p.setCreatedAt(res.getTimestamp("createdAt").toLocalDateTime());
+                    return p;
+                }
+            }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
-        return p;
+        return null;
     }
 
 

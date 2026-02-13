@@ -29,10 +29,7 @@ class testMaconnexion {
     @Test
     void testLoadDatabaseDoesNotThrow() {
         MaConnexion connexion = MaConnexion.getInstance();
-
-        assertDoesNotThrow(() -> {
-            connexion.loadDatabase();
-        });
+        assertDoesNotThrow(connexion::loadDatabase);
     }
 }
 
