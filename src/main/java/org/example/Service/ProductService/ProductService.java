@@ -92,11 +92,27 @@ public class ProductService implements InterfaceGlobal<Product> {
             ps.setTimestamp(4, Timestamp.valueOf(p.getCreatedAt()));
             ps.setInt(5, p.getProductId());
             ps.executeUpdate();
-            System.out.println("Produit ajoutée avec succes 2");
+            System.out.println("Produit modifier avec succes 2");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
+    }
+    public boolean update(Product p) {
+        String req = "UPDATE `product` SET category = ?, price=?, description = ?, createdAt = ? WHERE productId = ?";
+        try {
+            PreparedStatement ps = cnx.prepareStatement(req);
+            ps.setString(1, p.getCategory().name());
+            ps.setDouble(2, p.getPrice());
+            ps.setString(3, p.getDescription());
+            ps.setTimestamp(4, Timestamp.valueOf(p.getCreatedAt()));
+            ps.setInt(5, p.getProductId());
+            ps.executeUpdate();
+            System.out.println("Produit modifier avec succes ");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 

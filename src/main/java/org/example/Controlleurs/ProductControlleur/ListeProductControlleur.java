@@ -6,38 +6,34 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import org.example.Interfaces.InterfaceGlobal;
 import org.example.Model.Product.ClassProduct.Product;
-import org.example.Model.Product.EnumProduct.ProductCategory;
 import org.example.Service.ProductService.ProductService;
-
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 
 public class ListeProductControlleur implements Initializable {
 
 
     // TableView
-    @FXML
-    private TableView<Product> productTable;
-    @FXML private TableColumn<Product, Integer> colProductId;
-    @FXML private TableColumn<Product, ProductCategory> colCategory;
-    @FXML private TableColumn<Product, Double> colPrice;
-    @FXML private TableColumn<Product, String> colDescription;
-    @FXML private TableColumn<Product, LocalDate> colCreatedAt;
-    @FXML private TableColumn<Product, Void> colUpdate;
-    @FXML private TableColumn<Product, Void> colDelete;
+    @FXML private ListView<Product> productListView;
+
 
     @FXML private TextField searchField;
     @FXML private Label totalProductsLabel;
@@ -47,14 +43,15 @@ public class ListeProductControlleur implements Initializable {
     private ProductService PS;
 
 
-    private void loadProductData() {
-        productList.clear();
-        productList.addAll(PS.ReadAll());
-        productTable.setItems(productList);
-        filteredList.setAll(productList);
-        productTable.setItems(filteredList);
-        updateTotalLabel();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        PS = new ProductService();
+
+        setupListView();
+        loadProductData();
+        setupSearchListener();
     }
+
     @FXML
     private void goToCreatePage(ActionEvent event) {
 
@@ -71,136 +68,23 @@ public class ListeProductControlleur implements Initializable {
             e.printStackTrace();
         }
     }
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        PS = new ProductService();
+    private void setupListView() {
+        // Set custom cell factory for ListView
+        productListView.setCellFactory(listView -> new ProductListCell());
 
-        setupTableColumns();
-        setupActionButtons();
-        loadProductData();
-        setupSearchListener();
+        // Set placeholder when list is empty
+        Label placeholder = new Label("Aucun produit disponible");
+        placeholder.setStyle("-fx-text-fill: #95a5a6; -fx-font-size: 14px; -fx-font-style: italic;");
+        productListView.setPlaceholder(placeholder);
     }
 
-
-    private void setupTableColumns() {
-        colProductId.setCellValueFactory(new PropertyValueFactory<>("productId"));
-        colCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
-        colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        colCreatedAt.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
-
-
-        // Format price column to show currency
-        colPrice.setCellFactory(column -> new TableCell<Product, Double>() {
-            @Override
-            protected void updateItem(Double price, boolean empty) {
-                super.updateItem(price, empty);
-                if (empty || price == null) {
-                    setText(null);
-                } else {
-                    setText(String.format("%.2f DT", price));
-                }
-            }
-        });
-        // Format category column with badges
-        colCategory.setCellFactory(column -> new TableCell<Product, ProductCategory>() {
-            @Override
-            protected void updateItem(ProductCategory category, boolean empty) {
-                super.updateItem(category, empty);
-                if (empty || category == null) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    setText(formatCategoryName(category.name()));
-                    setStyle(getCategoryStyle(category.name()));
-                }
-            }
-        });
-
-        // Format description to show truncated text
-        colDescription.setCellFactory(column -> new TableCell<Product, String>() {
-            @Override
-            protected void updateItem(String description, boolean empty) {
-                super.updateItem(description, empty);
-                if (empty || description == null) {
-                    setText(null);
-                    setTooltip(null);
-                } else {
-                    String truncated = description.length() > 40
-                            ? description.substring(0, 40) + "..."
-                            : description;
-                    setText(truncated);
-
-                    if (description.length() > 40) {
-                        Tooltip tooltip = new Tooltip(description);
-                        setTooltip(tooltip);
-                    }
-                }
-            }
-        });
-
+    private void loadProductData() {
+        productList.clear();
+        productList.addAll(PS.ReadAll());
+        filteredList.setAll(productList);
+        productListView.setItems(filteredList);
+        updateTotalLabel();
     }
-
-    private void setupActionButtons() {
-        // Update Button Column
-        colUpdate.setCellFactory(new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
-            @Override
-            public TableCell<Product, Void> call(TableColumn<Product, Void> param) {
-                return new TableCell<Product, Void>() {
-                    private final Button updateBtn = new Button("Modifier");
-
-                    {
-                        updateBtn.getStyleClass().add("btn-update");
-                        updateBtn.setOnAction(event -> {
-                            Product product = getTableView().getItems().get(getIndex());
-                            handleUpdate(product);
-                        });
-                    }
-
-                    @Override
-                    protected void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(updateBtn);
-                            setAlignment(Pos.CENTER);
-                        }
-                    }
-                };
-            }
-        });
-
-        // Delete Button Column
-        colDelete.setCellFactory(new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
-            @Override
-            public TableCell<Product, Void> call(TableColumn<Product, Void> param) {
-                return new TableCell<Product, Void>() {
-                    private final Button deleteBtn = new Button("Supprimer");
-
-                    {
-                        deleteBtn.getStyleClass().add("btn-delete");
-                        deleteBtn.setOnAction(event -> {
-                            Product product = getTableView().getItems().get(getIndex());
-                            handleDelete(product);
-                        });
-                    }
-
-                    @Override
-                    protected void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(deleteBtn);
-                            setAlignment(Pos.CENTER);
-                        }
-                    }
-                };
-            }
-        });
-    }
-
 
 
     private void setupSearchListener() {
@@ -237,50 +121,6 @@ public class ListeProductControlleur implements Initializable {
     }
 
     @FXML
-    private void handleUpdate(Product product) {
-        // Show confirmation dialog or navigate to edit page
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Modification");
-        alert.setHeaderText("Modifier le produit #" + product.getProductId());
-        alert.setContentText("Voulez-vous modifier ce produit?\n\n" +
-                "Catégorie: " + formatCategoryName(product.getCategory().name()) + "\n" +
-                "Prix: " + String.format("%.2f €", product.getPrice()));
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            // TODO: Navigate to edit page or open edit dialog
-            // For now, just show info
-            showInfoAlert("Information", "Fonctionnalité de modification à implémenter.\n" +
-                    "Vous pouvez naviguer vers la page d'édition ici.");
-        }
-    }
-
-    @FXML
-    private void handleDelete(Product product) {
-        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmAlert.setTitle("Confirmation de suppression");
-        confirmAlert.setHeaderText("Supprimer le produit #" + product.getProductId());
-        confirmAlert.setContentText("Êtes-vous sûr de vouloir supprimer ce produit?\n\n" +
-                "Catégorie: " + formatCategoryName(product.getCategory().name()) + "\n" +
-                "Prix: " + String.format("%.2f €", product.getPrice()) + "\n\n" +
-                "Cette action est irréversible!");
-
-        // Style the alert
-        DialogPane dialogPane = confirmAlert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/Styles/StyleProduct.css").toExternalForm());
-
-        Optional<ButtonType> result = confirmAlert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            if (PS.delete(product.getProductId())) {
-                showSuccessAlert("Succès", "Le produit a été supprimé avec succès!");
-                loadProductData(); // Refresh table
-            } else {
-                showErrorAlert("Erreur", "Erreur lors de la suppression du produit.");
-            }
-        }
-    }
-
-    @FXML
     private void handleSearch() {
         String searchText = searchField.getText();
         filterProducts(searchText);
@@ -293,40 +133,51 @@ public class ListeProductControlleur implements Initializable {
         updateTotalLabel();
     }
 
-    @FXML
-    private void goToCreatePage() {
-        // TODO: Navigate to create product page
-        showInfoAlert("Navigation", "Navigation vers la page de création de produit.");
+
+    // Dans votre ListView, lors du clic sur "Modifier"
+    private void handleUpdate(Product product) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/Product/ProductUpdateGUI.fxml")
+            );
+            Parent root = loader.load();
+
+            ProductUpdateControlleur controller = loader.getController();
+            controller.loadProduct(product); // Charge les données
+
+            Stage stage = (Stage) productListView.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    // Utility methods for formatting
+    private void handleDelete(Product product) {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Confirmation de suppression");
+        confirmAlert.setHeaderText("Supprimer le produit ");
+        confirmAlert.setContentText("Êtes-vous sûr de vouloir supprimer ce produit?\n\n" +
+                "Catégorie: " + formatCategoryName(product.getCategory().name()) + "\n" +
+                "Prix: " + String.format("%.2f DT", product.getPrice()) + "\n\n" +
+                "Cette action est irréversible!");
+
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            if (PS.delete(product.getProductId())) {
+                showSuccessAlert("Succès", "Le produit a été supprimé avec succès!");
+                loadProductData();
+            } else {
+                showErrorAlert("Erreur", "Erreur lors de la suppression du produit.");
+            }
+        }
+    }
+
     private String formatCategoryName(String category) {
         if (category == null) return "";
         return category.replace("_", " ");
     }
 
-    private String getCategoryStyle(String category) {
-        if (category == null) return "";
-
-        if (category.startsWith("COMPTE")) {
-            return "-fx-background-color: #e3f2fd; -fx-text-fill: #1976D2; " +
-                    "-fx-background-radius: 12px; -fx-padding: 4px 12px; -fx-font-weight: bold;";
-        } else if (category.startsWith("CARTE")) {
-            return "-fx-background-color: #f3e5f5; -fx-text-fill: #7B1FA2; " +
-                    "-fx-background-radius: 12px; -fx-padding: 4px 12px; -fx-font-weight: bold;";
-        } else if (category.startsWith("EPARGNE") || category.contains("DEPOT") || category.contains("PLACEMENT")) {
-            return "-fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; " +
-                    "-fx-background-radius: 12px; -fx-padding: 4px 12px; -fx-font-weight: bold;";
-        } else if (category.startsWith("ASSURANCE")) {
-            return "-fx-background-color: #fff3e0; -fx-text-fill: #e65100; " +
-                    "-fx-background-radius: 12px; -fx-padding: 4px 12px; -fx-font-weight: bold;";
-        }
-
-        return "-fx-background-color: #f5f5f5; -fx-text-fill: #666666; " +
-                "-fx-background-radius: 12px; -fx-padding: 4px 12px; -fx-font-weight: bold;";
-    }
-
-    // Alert methods
     private void showSuccessAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -343,11 +194,137 @@ public class ListeProductControlleur implements Initializable {
         alert.showAndWait();
     }
 
-    private void showInfoAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+
+    // ==================== Custom ListView Cell ====================
+    private class ProductListCell extends ListCell<Product> {
+        private final VBox container;
+        private final HBox headerBox;
+        private final HBox bodyBox;
+        private final HBox footerBox;
+
+        private final Label idLabel;
+        private final Label categoryLabel;
+        private final Label priceLabel;
+        private final Label descriptionLabel;
+        private final Label dateLabel;
+        private final Button updateButton;
+        private final Button deleteButton;
+
+        public ProductListCell() {
+            super();
+
+            // Container
+            container = new VBox(10);
+            container.setPadding(new Insets(15));
+            container.getStyleClass().add("product-card");
+
+            // Header with ID, Category, and Price
+            headerBox = new HBox(15);
+            headerBox.setAlignment(Pos.CENTER_LEFT);
+
+            idLabel = new Label();
+            idLabel.getStyleClass().add("product-id");
+            idLabel.setFont(Font.font("System Bold", 14));
+
+            categoryLabel = new Label();
+            categoryLabel.getStyleClass().add("product-category-badge");
+
+            Region spacer1 = new Region();
+            HBox.setHgrow(spacer1, Priority.ALWAYS);
+
+            priceLabel = new Label();
+            priceLabel.getStyleClass().add("product-price");
+            priceLabel.setFont(Font.font("System Bold", 16));
+
+            headerBox.getChildren().addAll(idLabel, categoryLabel, spacer1, priceLabel);
+
+            // Body with Description
+            bodyBox = new HBox();
+            bodyBox.setAlignment(Pos.CENTER_LEFT);
+
+            descriptionLabel = new Label();
+            descriptionLabel.getStyleClass().add("product-description");
+            descriptionLabel.setWrapText(true);
+            descriptionLabel.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(descriptionLabel, Priority.ALWAYS);
+
+            bodyBox.getChildren().add(descriptionLabel);
+
+            // Footer with Date and Action Buttons
+            footerBox = new HBox(10);
+            footerBox.setAlignment(Pos.CENTER_LEFT);
+
+            dateLabel = new Label();
+            dateLabel.getStyleClass().add("product-date");
+            dateLabel.setFont(Font.font("System", 11));
+
+            Region spacer2 = new Region();
+            HBox.setHgrow(spacer2, Priority.ALWAYS);
+
+            updateButton = new Button("Modifier");
+            updateButton.getStyleClass().add("btn-update");
+
+            deleteButton = new Button("Supprimer");
+            deleteButton.getStyleClass().add("btn-delete");
+
+            footerBox.getChildren().addAll(dateLabel, spacer2, updateButton, deleteButton);
+
+            // Add all sections to container
+            container.getChildren().addAll(headerBox, new Separator(), bodyBox, footerBox);
+        }
+
+        @Override
+        protected void updateItem(Product product, boolean empty) {
+            super.updateItem(product, empty);
+
+            if (empty || product == null) {
+                setGraphic(null);
+            } else {
+                // Set ID
+//                idLabel.setText("#" + product.getProductId());
+
+                // Set Category with styling
+                String category = formatCategoryName(product.getCategory().name());
+                categoryLabel.setText(category);
+                categoryLabel.setStyle(getCategoryStyle(product.getCategory().name()));
+
+                // Set Price
+                priceLabel.setText(String.format("%.2f DT", product.getPrice()));
+
+                // Set Description
+                descriptionLabel.setText(product.getDescription());
+
+                // Set Date
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                dateLabel.setText("📅 Créé le: " + product.getCreatedAt().format(formatter));
+
+                // Set button actions
+                updateButton.setOnAction(e -> handleUpdate(product));
+                deleteButton.setOnAction(e -> handleDelete(product));
+
+                setGraphic(container);
+            }
+        }
+
+        private String getCategoryStyle(String category) {
+            if (category == null) return "";
+
+            if (category.startsWith("COMPTE")) {
+                return "-fx-background-color: #e3f2fd; -fx-text-fill: #1976D2; " +
+                        "-fx-background-radius: 12px; -fx-padding: 4px 12px; -fx-font-weight: bold; -fx-font-size: 11px;";
+            } else if (category.startsWith("CARTE")) {
+                return "-fx-background-color: #f3e5f5; -fx-text-fill: #7B1FA2; " +
+                        "-fx-background-radius: 12px; -fx-padding: 4px 12px; -fx-font-weight: bold; -fx-font-size: 11px;";
+            } else if (category.startsWith("EPARGNE") || category.contains("DEPOT") || category.contains("PLACEMENT")) {
+                return "-fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; " +
+                        "-fx-background-radius: 12px; -fx-padding: 4px 12px; -fx-font-weight: bold; -fx-font-size: 11px;";
+            } else if (category.startsWith("ASSURANCE")) {
+                return "-fx-background-color: #fff3e0; -fx-text-fill: #e65100; " +
+                        "-fx-background-radius: 12px; -fx-padding: 4px 12px; -fx-font-weight: bold; -fx-font-size: 11px;";
+            }
+
+            return "-fx-background-color: #f5f5f5; -fx-text-fill: #666666; " +
+                    "-fx-background-radius: 12px; -fx-padding: 4px 12px; -fx-font-weight: bold; -fx-font-size: 11px;";
+        }
     }
 }
