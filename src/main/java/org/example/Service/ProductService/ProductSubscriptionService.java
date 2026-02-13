@@ -19,14 +19,26 @@ public class ProductSubscriptionService implements InterfaceGlobal<ProductSubscr
 
     @Override
     public void Add(ProductSubscription p) {
-        String req = "INSERT INTO `ProductSubscription`(`client`, `product`, `type`, `subscriptionDate`, `expirationDate`, `status`) " +
-                "VALUES ('"+p.getClient()+"','"+p.getProduct()+"','"+p.getType()+"','"+p.getSubscriptionDate()+"','"+p.getExpirationDate()+"','"+p.getStatus()+"')";
-        try {
-            Statement st = cnx.createStatement();
-            st.executeUpdate(req);
-            System.out.println("ProduitSubscription ajoutee avec succes!");
+
+        String req = "INSERT INTO ProductSubscription " +
+                "(client, product, type, subscriptionDate, expirationDate, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+
+            ps.setInt(1, p.getClient());
+            ps.setInt(2, p.getProduct());
+            ps.setString(3, p.getType().name());   // ENUM safe
+            ps.setTimestamp(4, Timestamp.valueOf(p.getSubscriptionDate()));
+            ps.setTimestamp(5, Timestamp.valueOf(p.getExpirationDate()));
+            ps.setString(6, p.getStatus().name()); // ENUM safe
+
+            ps.executeUpdate();
+
+            System.out.println("ProductSubscription ajouté avec succès!");
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
