@@ -1,0 +1,38 @@
+.root {
+    -fx-background-color: #f8f9fa;
+    -fx-font-family: "Segoe UI";
+}
+
+.header-container {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8,0,0,2);
+}
+
+.page-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.btn-add {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+}
+
+.btn-update {
+    -fx-background-color: #FF9800;
+    -fx-text-fill: white;
+}
+
+.btn-delete {
+    -fx-background-color: #f44336;
+    -fx-text-fill: white;
+}
+
+.table-view {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+}

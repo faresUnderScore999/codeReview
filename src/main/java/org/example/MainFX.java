@@ -10,12 +10,25 @@ import java.io.IOException;
 
 public class MainFX extends Application {
 
-    public static void main(String[] args) {
-        launch(args);
+    @Override
+    public void start(Stage stage) throws Exception {
+
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/Loan/LoanList.fxml")
+        );
+        if (loader.getLocation() == null) {
+            System.out.println("FXML NOT FOUND!");
+        }
+
+        Scene scene = new Scene(loader.load(), 1000, 600);
+
+        stage.setTitle("Loan Management System");
+        stage.setScene(scene);
+        stage.setResizable(true);
+        stage.show();
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-
+    public static void main(String[] args) {
+        launch(args);
     }
 }

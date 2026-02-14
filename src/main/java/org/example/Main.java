@@ -14,6 +14,7 @@ public class Main {
         LoanService ls = new LoanService();
         Loan l= new Loan(30000,12,4,0);
         Loan l2= new Loan(30000,14,5,0);
+        ls.Add(l2);
        /*
         ls.Add(l);
         ls.Add(l2);
@@ -29,6 +30,7 @@ public class Main {
         ls.Delete(1);
         System.out.println(ls.ReadAll());
           */
+        /*
         RepaymentService rs = new RepaymentService();
 
         Loan loan = ls.ReadId(3);
