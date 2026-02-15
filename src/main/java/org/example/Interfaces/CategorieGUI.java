@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+        <?import javafx.scene.control.*?>
+        <?import javafx.scene.layout.*?>
+        <?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+fx:controller="org.example.Controller.BudgetController.ListeCategorieGUIController">
+
+    <!-- Top: barre de recherche -->
+    <top>
+        <HBox spacing="10" padding="10" alignment="CENTER_LEFT">
+            <Label text="Rechercher:"/>
+            <TextField fx:id="searchField" promptText="Nom de la catégorie..."/>
+            <Button text="Réinitialiser" onAction="#handleReset"/>
+        </HBox>
+    </top>
+
+    <!-- Center: ListView stylée -->
+    <center>
+        <ListView fx:id="categorieListView" prefWidth="600" prefHeight="400"/>
+    </center>
+
+    <!-- Bottom: Bouton créer catégorie -->
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" padding="10">
+            <Button text="Créer une catégorie" onAction="#goToCreateCategorie"
+style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
