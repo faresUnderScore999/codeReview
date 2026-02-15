@@ -155,7 +155,24 @@ public class LoanManagerGUI implements Initializable {
     }
 
     private void handleUpdate(Loan loan) {
-        showAlert("Info", "Update prêt #" + loan.getLoanId());
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/Loan/UpdateLoan.fxml")
+            );
+
+            Parent root = loader.load();
+
+            UpdateLoanControlleur controller = loader.getController();
+            controller.setLoanData(loan);
+
+            Stage stage = (Stage) loanTable.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Modifier prêt");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleDelete(Loan loan) {
