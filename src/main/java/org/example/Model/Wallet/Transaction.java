@@ -119,13 +119,16 @@ public class Transaction {
         return """
                 CREATE TABLE transaction (
                     id_transaction INT PRIMARY KEY AUTO_INCREMENT,
-                    montant DOUBLE NOT NULL,
-                    type VARCHAR(20) NOT NULL,
+                    montant DECIMAL(15,2) NOT NULL,
+                    type ENUM('DEBIT','CREDIT') NOT NULL,
                     date_transaction DATETIME NOT NULL,
                     id_wallet INT NOT NULL,
-                    FOREIGN KEY (id_wallet) REFERENCES wallet(id_wallet)
+                    CONSTRAINT fk_wallet_transaction
+                        FOREIGN KEY (id_wallet)
+                        REFERENCES wallet(id_wallet)
                         ON DELETE CASCADE
-                );
+                        ON UPDATE CASCADE
+                ) ENGINE=InnoDB;
                 """;
     }
 }

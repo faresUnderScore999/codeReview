@@ -50,7 +50,12 @@ public class MenuGUIController implements Initializable {
      */
     @FXML
     private void goToBudget() {
-
+        try {
+            navigateToScene("/Budget/CategorieListeGUI.fxml", "Gestion des Budgets");
+        } catch (IOException e) {
+            showErrorAlert("Erreur de Navigation",
+                    "Impossible d'accéder au module Gestion Budgets.\n" + e.getMessage());
+        }
     }
 
     /**

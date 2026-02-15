@@ -120,11 +120,11 @@ public class Wallet {
                 CREATE TABLE wallet (
                     id_wallet INT PRIMARY KEY AUTO_INCREMENT,
                     nom_proprietaire VARCHAR(100) NOT NULL,
-                    solde DOUBLE NOT NULL,
+                    solde DECIMAL(15,2) NOT NULL DEFAULT 0.00,
                     devise VARCHAR(10) NOT NULL,
                     statut VARCHAR(20) NOT NULL,
                     date_creation DATETIME NOT NULL
-                );
+                ) ENGINE=InnoDB;
                 """;
     }
 }

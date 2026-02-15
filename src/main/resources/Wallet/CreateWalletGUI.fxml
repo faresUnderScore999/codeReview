@@ -20,6 +20,11 @@
           AnchorPane.leftAnchor="0"
           AnchorPane.rightAnchor="0"
           AnchorPane.topAnchor="0">
+        <Button onAction="#goBackToMenu" prefWidth="120.0" styleClass="btn-back" text="⬅ Retour">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Button>
 
         <Label text="Gestion des Wallets" styleClass="header-title">
             <font>

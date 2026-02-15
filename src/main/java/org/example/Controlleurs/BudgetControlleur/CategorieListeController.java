@@ -216,7 +216,7 @@ public class CategorieListeController implements Initializable {
     @FXML
     private void goBackToMenu() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Menu.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MenuGUI.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) categorieListView.getScene().getWindow();
