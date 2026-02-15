@@ -177,14 +177,29 @@ public class LoanManagerGUI implements Initializable {
 
     private void handleDelete(Loan loan) {
 
+        // 🔴 Prevent deleting active loan
+        if (loan.getStatus() == LoanStatus.ACTIVE) {
+            showError("Impossible de supprimer un prêt actif.");
+            return;
+        }
+
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirmation");
-        confirm.setHeaderText("Supprimer prêt #" + loan.getLoanId());
+        confirm.setTitle("Confirmation de suppression");
+        confirm.setHeaderText("Supprimer le prêt #" + loan.getLoanId());
+        confirm.setContentText(
+                "Montant: " + loan.getAmount() + " DT\n" +
+                        "Statut: " + loan.getStatus() + "\n\n" +
+                        "Cette action est irréversible."
+        );
 
         Optional<ButtonType> result = confirm.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
+
             service.Delete(loan.getLoanId());
+
+            showSuccess("Prêt supprimé avec succès.");
+
             loadData();
         }
     }
@@ -213,6 +228,22 @@ public class LoanManagerGUI implements Initializable {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showError(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+    private void showSuccess(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Succès");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
         alert.showAndWait();
     }
 }
