@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-        <?import javafx.scene.control.*?>
-        <?import javafx.scene.layout.*?>
-        <?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="org.example.Controller.BudgetController.ListeCategorieGUIController">
+            fx:controller="org.example.Controller.BudgetController.CategorieGUIController">
 
     <!-- Top: barre de recherche -->
     <top>
@@ -25,8 +25,9 @@ fx:controller="org.example.Controller.BudgetController.ListeCategorieGUIControll
     <bottom>
         <HBox alignment="CENTER_RIGHT" padding="10">
             <Button text="Créer une catégorie" onAction="#goToCreateCategorie"
-style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
         </HBox>
     </bottom>
 
 </BorderPane>
+

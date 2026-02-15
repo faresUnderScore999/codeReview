@@ -1,6 +1,6 @@
 package org.example.Service.BudgetService;
 
-import org.example.Interfaces.InterfaceGblobal;
+import org.example.Interfaces.InterfaceGlobal;
 import org.example.Model.Budget.Categorie;
 import org.example.Model.Product.ClassProduct.Product;
 import org.example.Model.Product.EnumProduct.ProductCategory;
@@ -10,11 +10,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BudgetService implements InterfaceGblobal<Categorie> {
+public class BudgetService implements InterfaceGlobal<Categorie> {
     Connection cnx = MaConnexion.getInstance().getCnx();
 
     @Override
-    public void add(Categorie c) {
+    public void Add(Categorie c) {
         String req = "INSERT INTO `categorie`(`nomCategorie`, `budgetPrevu`, `seuilAlerte`) VALUES" +
                 "('" + c.getNomCategorie() + "','" + c.getBudgetPrevu() + "','" + c.getSeuilAlerte() + "')";
         try {
@@ -28,11 +28,11 @@ public class BudgetService implements InterfaceGblobal<Categorie> {
     }
 
     @Override
-    public void delete(Categorie c) {
+    public void Delete(Integer id) {
         String req = "DELETE FROM `categorie` WHERE idCategorie = ?";
         try {
             PreparedStatement ps = cnx.prepareStatement(req);
-            ps.setInt(1, c.getIdCategorie());
+            ps.setInt(1, id);
             ps.executeUpdate();
             System.out.println("categorie Supprimer avec succes");
         } catch (SQLException e) {
@@ -42,7 +42,7 @@ public class BudgetService implements InterfaceGblobal<Categorie> {
     }
 
     @Override
-    public void update(Categorie c) {
+    public void Update(Categorie c) {
         String req = "UPDATE `categorie` SET `nomCategorie`=?,`budgetPrevu`=?,`seuilAlerte`=? WHERE idCategorie = ?";
         try {
             PreparedStatement ps = cnx.prepareStatement(req);
@@ -59,7 +59,7 @@ public class BudgetService implements InterfaceGblobal<Categorie> {
     }
 
     @Override
-    public List<Categorie> getAll() {
+    public List<Categorie> ReadAll() {
         List<Categorie> categories = new ArrayList<>();
         String req = "SELECT * FROM `categorie`";
         try {
@@ -78,5 +78,29 @@ public class BudgetService implements InterfaceGblobal<Categorie> {
             throw new RuntimeException(e);
         }
         return categories;
+    }
+
+    @Override
+    public Categorie ReadId(Integer id) {
+        String req = "SELECT * FROM categorie WHERE idCategorie = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+            ps.setInt(1, id);
+            try (ResultSet res = ps.executeQuery()) {
+
+                if (res.next()) {
+                    Categorie c = new Categorie();
+                    c.setIdCategorie(res.getInt("idCategorie"));
+                    c.setNomCategorie(res.getString("nomCategorie"));
+                    c.setBudgetPrevu(res.getDouble("budgetPrevu"));
+                    c.setSeuilAlerte(res.getDouble("seuilAlerte"));
+                    return c;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null; // si aucune catégorie trouvée
     }
 }

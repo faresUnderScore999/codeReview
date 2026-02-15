@@ -2,6 +2,7 @@ package org.example;
 import org.example.Interfaces.InterfaceGlobal;
 import org.example.Model.Product.ClassProduct.Product;
 import org.example.Model.Product.EnumProduct.ProductCategory;
+import org.example.Service.BudgetService.BudgetService;
 import org.example.Service.ProductService.ProductService;
 
 import org.example.Model.Loan.LoanClass.Loan;
@@ -17,6 +18,13 @@ import org.example.Service.LoanService.RepaymentService;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
+
+        Categorie c = new Categorie("test",123.0,142.0);
+
+        BudgetService  BS = new BudgetService();
+
+        BS.Add(c);
+
 
 
     }
