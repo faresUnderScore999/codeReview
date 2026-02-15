@@ -1,4 +1,4 @@
-package org.example.Controller.BudgetController;
+package org.example.Controlleurs.BudgetControlleur;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

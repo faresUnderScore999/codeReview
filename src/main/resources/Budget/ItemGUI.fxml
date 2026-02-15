@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.Controller.BudgetController.ItemController"
+            fx:controller="org.example.Controlleurs.BudgetControlleur.ItemController"
             prefWidth="950" prefHeight="620"
             style="-fx-background-color: linear-gradient(to bottom right,#020617,#0f172a);">
 

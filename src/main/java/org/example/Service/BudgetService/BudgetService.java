@@ -27,6 +27,20 @@ public class BudgetService implements InterfaceGlobal<Categorie> {
         }
     }
 
+    public boolean add(Categorie c) {
+        String req = "INSERT INTO `categorie`(`nomCategorie`, `budgetPrevu`, `seuilAlerte`) VALUES" +
+                "('" + c.getNomCategorie() + "','" + c.getBudgetPrevu() + "','" + c.getSeuilAlerte() + "')";
+        try {
+            Statement st = cnx.createStatement();
+            st.executeUpdate(req);
+            System.out.println("Categorie ajoutee avec succes!");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     @Override
     public void Delete(Integer id) {
         String req = "DELETE FROM `categorie` WHERE idCategorie = ?";
@@ -37,6 +51,21 @@ public class BudgetService implements InterfaceGlobal<Categorie> {
             System.out.println("categorie Supprimer avec succes");
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+
+    }
+
+    public boolean delete(Integer id) {
+        String req = "DELETE FROM `categorie` WHERE idCategorie = ?";
+        try {
+            PreparedStatement ps = cnx.prepareStatement(req);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            System.out.println("categorie Supprimer avec succes");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
 
     }
@@ -54,6 +83,23 @@ public class BudgetService implements InterfaceGlobal<Categorie> {
             System.out.println("Categorie modifiée avec succes");
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+
+    }
+    public boolean update(Categorie c) {
+        String req = "UPDATE `categorie` SET `nomCategorie`=?,`budgetPrevu`=?,`seuilAlerte`=? WHERE idCategorie = ?";
+        try {
+            PreparedStatement ps = cnx.prepareStatement(req);
+            ps.setString(1, c.getNomCategorie());
+            ps.setDouble(2, c.getBudgetPrevu());
+            ps.setDouble(3, c.getSeuilAlerte());
+            ps.setInt(4, c.getIdCategorie());
+            ps.executeUpdate();
+            System.out.println("Categorie modifiée avec succes");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
 
     }

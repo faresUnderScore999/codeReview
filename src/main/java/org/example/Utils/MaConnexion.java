@@ -1,5 +1,6 @@
 package org.example.Utils;
 
+import org.example.Model.Budget.Categorie;
 import org.example.Model.Product.ClassProduct.ProductSubscription;
 import org.example.Model.Product.ClassProduct.Product;
 
@@ -52,6 +53,9 @@ public class MaConnexion {
 
                 //PRODUCT SUBSCRIPTION TABLE
                 st.executeUpdate(ProductSubscription.SQLTable());
+
+                //Categorie TABLE
+                st.executeUpdate(Categorie.SQLTable());
 
                 System.out.println("Tables checked/created successfully.");
 

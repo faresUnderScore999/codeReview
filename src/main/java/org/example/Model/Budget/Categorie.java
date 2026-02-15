@@ -21,6 +21,12 @@ public class Categorie {
         this.budgetPrevu = budgetPrevu;
         this.seuilAlerte = seuilAlerte;
     }
+    public Categorie(int id,String nomCategorie, double budgetPrevu, double seuilAlerte) {
+        this.idCategorie = id;
+        this.nomCategorie = nomCategorie;
+        this.budgetPrevu = budgetPrevu;
+        this.seuilAlerte = seuilAlerte;
+    }
 
     // Getters & Setters
     public int getIdCategorie() {
@@ -72,4 +78,17 @@ public class Categorie {
                 ", seuilAlerte=" + seuilAlerte +
                 '}';
     }
+
+    public static String SQLTable() {
+        return """
+                CREATE TABLE IF NOT EXISTS categorie (
+                      idCategorie INT(11) NOT NULL AUTO_INCREMENT,
+                      nomCategorie VARCHAR(255) NOT NULL,
+                      budgetPrevu DOUBLE NOT NULL,
+                      seuilAlerte DOUBLE NOT NULL,
+                      PRIMARY KEY (idCategorie)
+                    ) ENGINE=InnoDB\s
+                    DEFAULT CHARSET=utf8mb4\s
+                    COLLATE=utf8mb4_general_ci;
+                """;}
 }
