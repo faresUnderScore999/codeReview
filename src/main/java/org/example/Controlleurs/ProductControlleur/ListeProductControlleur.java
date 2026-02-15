@@ -68,6 +68,22 @@ public class ListeProductControlleur implements Initializable {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void goBackToMenu(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(
+                    getClass().getResource("/MenuGUI.fxml")
+            );
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Manager");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setupListView() {
         // Set custom cell factory for ListView
         productListView.setCellFactory(listView -> new ProductListCell());
