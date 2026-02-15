@@ -34,6 +34,7 @@ public class LoanManagerGUI implements Initializable {
 
     @FXML private TextField searchField;
     @FXML private Label totalLoansLabel;
+    @FXML private TableColumn<Loan, Void> colRepayments;
 
     private ObservableList<Loan> loanList = FXCollections.observableArrayList();
     private ObservableList<Loan> filteredList = FXCollections.observableArrayList();
@@ -97,10 +98,32 @@ public class LoanManagerGUI implements Initializable {
         });
     }
 
+
     private void setupButtons() {
 
         colUpdate.setCellFactory(getButtonCell("Modifier", "btn-update", true));
         colDelete.setCellFactory(getButtonCell("Supprimer", "btn-delete", false));
+
+        colRepayments.setCellFactory(param -> new TableCell<>() {
+
+            private final Button btn = new Button("Voir");
+
+            {
+                btn.getStyleClass().add("btn-primary");
+
+                btn.setOnAction(e -> {
+                    Loan loan = getTableView().getItems().get(getIndex());
+                    openRepaymentPage(loan);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : btn);
+                setAlignment(Pos.CENTER);
+            }
+        });
     }
 
     private Callback<TableColumn<Loan, Void>, TableCell<Loan, Void>> getButtonCell(String text, String style, boolean isUpdate) {
@@ -217,6 +240,28 @@ public class LoanManagerGUI implements Initializable {
             Stage stage = (Stage) loanTable.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Simulateur de prêt");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void openRepaymentPage(Loan loan) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/Loan/RepaymentList.fxml")
+            );
+
+            Parent root = loader.load();
+
+            RepaymentListController controller = loader.getController();
+            controller.setLoanId(loan.getLoanId());
+
+            Stage stage = (Stage) loanTable.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Remboursements du prêt #" + loan.getLoanId());
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -30,7 +30,7 @@ public class Repayment {
         this.amount = amount;
         this.capitalPart = capitalPart;
         this.interestPart = interestPart;
-        this.status = RepaymentStatus.UNPAID;
+        this.status = status;
     }
 
     // Constructor with ID (for UPDATE / SELECT)

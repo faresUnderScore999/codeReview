@@ -51,6 +51,8 @@
                 <TableColumn fx:id="colRemaining" text="Restant" prefWidth="130"/>
                 <TableColumn fx:id="colUpdate" text="Modifier" prefWidth="100"/>
                 <TableColumn fx:id="colDelete" text="Supprimer" prefWidth="100"/>
+                <TableColumn fx:id="colRepayments" text="Remboursements" prefWidth="150"/>
+
             </columns>
 
         </TableView>
