@@ -1,5 +1,6 @@
 package org.example.Utils;
 
+import org.example.Model.Budget.Categorie;
 import org.example.Model.Product.ClassProduct.ProductSubscription;
 import org.example.Model.Product.ClassProduct.Product;
 import org.example.Model.Wallet.Transaction;
@@ -54,6 +55,9 @@ public class MaConnexion {
 
                 //PRODUCT SUBSCRIPTION TABLE
                 st.executeUpdate(ProductSubscription.SQLTable());
+
+                //Categorie TABLE
+                st.executeUpdate(Categorie.SQLTable());
 
                 //Transaction TABLE
                 st.executeUpdate(Transaction.SQLTable());

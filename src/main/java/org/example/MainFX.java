@@ -20,13 +20,11 @@ public class MainFX extends Application {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/MenuGUI.fxml")));
             Scene scene = new Scene(root);
-            primaryStage.setTitle("Manager");
-            primaryStage.setMinWidth(900);
-            primaryStage.setMinHeight(600);
+            primaryStage.setTitle("Product Manager");
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
