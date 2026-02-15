@@ -1,118 +1,155 @@
-package org.example.Controlleurs.BudgetControlleur;
+package org.example.Controller.BudgetController;
 
-import javafx.scene.control.Alert;
-import org.example.Model.Budget.Item;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import org.example.Model.Budget.Categorie;
+import org.example.Model.Budget.Item;
+import org.example.Service.BudgetService.BudgetService;
 import org.example.Service.BudgetService.ItemService;
 
 public class ItemController {
 
-//    private ItemService itemService;
-//
-//    public ItemController() {
-//        itemService = new ItemService();
-//    }
-//
-//    /**
-//     * Crée un item avec validation des saisies et alertes JavaFX
-//     */
-//    public Item creerItem(String libelle, double montant, Categorie categorie) {
-//
-//        // --------- CONTROLES DE SAISIE ---------
-//        if (libelle == null || libelle.trim().isEmpty()) {
-//            showError("Libellé obligatoire", "Le libellé de l'item est obligatoire !");
-//            return null;
-//        }
-//
-//        if (montant < 0) {
-//            showError("Montant invalide", "Le montant de l'item ne peut pas être négatif !");
-//            return null;
-//        }
-//
-//        if (categorie == null) {
-//            showError("Catégorie obligatoire", "L'item doit être associé à une catégorie !");
-//            return null;
-//        }
-//
-//        // --------- CREATION DE L'OBJET ---------
-//        Item item = new Item();
-//        item.setLibelle(libelle);
-//        item.setMontant(montant);
-//        item.setCategorie(categorie);
-//
-//        // --------- ENREGISTREMENT EN BASE VIA SERVICE ---------
-//        if (itemService.create(item)) {
-//            showSuccess("Succès", "Item créé avec succès !");
-//            return item;
-//        } else {
-//            showError("Erreur", "Erreur lors de la création de l'item en base !");
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * Modification d'un item
-//     */
-//    public boolean modifierItem(Item item, String nouveauLibelle, double nouveauMontant) {
-//        if (item == null) {
-//            showError("Erreur", "Aucun item sélectionné !");
-//            return false;
-//        }
-//
-//        if (nouveauLibelle == null || nouveauLibelle.trim().isEmpty()) {
-//            showError("Libellé obligatoire", "Le libellé de l'item est obligatoire !");
-//            return false;
-//        }
-//
-//        if (nouveauMontant < 0) {
-//            showError("Montant invalide", "Le montant ne peut pas être négatif !");
-//            return false;
-//        }
-//
-//        item.setLibelle(nouveauLibelle);
-//        item.setMontant(nouveauMontant);
-//
-//        if (itemService.update(item)) {
-//            showSuccess("Succès", "Item modifié avec succès !");
-//            return true;
-//        } else {
-//            showError("Erreur", "Erreur lors de la modification de l'item !");
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * Suppression d'un item
-//     */
-//    public boolean supprimerItem(Item item) {
-//        if (item == null) {
-//            showError("Erreur", "Aucun item sélectionné !");
-//            return false;
-//        }
-//
-//        if (itemService.delete(item.getIdItem())) {
-//            showSuccess("Succès", "Item supprimé avec succès !");
-//            return true;
-//        } else {
-//            showError("Erreur", "Erreur lors de la suppression de l'item !");
-//            return false;
-//        }
-//    }
-//
-//    // --------- Méthodes utilitaires pour alertes ---------
-//    private void showError(String title, String message) {
-//        Alert alert = new Alert(Alert.AlertType.ERROR);
-//        alert.setTitle(title);
-//        alert.setHeaderText(null);
-//        alert.setContentText(message);
-//        alert.showAndWait();
-//    }
-//
-//    private void showSuccess(String title, String message) {
-//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//        alert.setTitle(title);
-//        alert.setHeaderText(null);
-//        alert.setContentText(message);
-//        alert.showAndWait();
-//    }
+    // 🔹 Services
+    private final ItemService itemService = new ItemService();
+    private final BudgetService budgetService = new BudgetService();
+
+    private final ObservableList<Item> itemList = FXCollections.observableArrayList();
+    private final ObservableList<Categorie> categorieList = FXCollections.observableArrayList();
+
+    // 🔹 Inputs
+    @FXML
+    private TextField tfLibelle;
+
+    @FXML
+    private TextField tfMontant;
+
+    @FXML
+    private ComboBox<Categorie> cbCategorie;
+
+    // 🔹 Table
+    @FXML
+    private TableView<Item> tableItem;
+
+    @FXML
+    private TableColumn<Item, String> colLibelle;
+
+    @FXML
+    private TableColumn<Item, Double> colMontant;
+
+    @FXML
+    private TableColumn<Item, String> colCategorie;
+
+    // ================= INIT =================
+    @FXML
+    public void initialize() {
+
+        colLibelle.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(data.getValue().getLibelle()));
+
+        colMontant.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getMontant()));
+
+        colCategorie.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(
+                        data.getValue().getCategorie().getNomCategorie()));
+
+        loadCategories();
+        loadItems();
+    }
+
+    // ================= LOAD =================
+    private void loadCategories() {
+        categorieList.setAll(budgetService.ReadAll());
+        cbCategorie.setItems(categorieList);
+    }
+
+    private void loadItems() {
+        itemList.setAll(itemService.ReadAll());
+        tableItem.setItems(itemList);
+    }
+
+    // ================= ADD =================
+    @FXML
+    private void ajouterItem() {
+
+        if (!validerChamps()) return;
+
+        Item item = new Item();
+        item.setLibelle(tfLibelle.getText());
+        item.setMontant(Double.parseDouble(tfMontant.getText()));
+        item.setCategorie(cbCategorie.getValue());
+
+        itemService.Add(item);
+        loadItems();
+        clearFields();
+    }
+
+    // ================= DELETE =================
+    @FXML
+    private void supprimerItem() {
+        Item selected = tableItem.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            showAlert("Veuillez sélectionner un item !");
+            return;
+        }
+
+        itemService.Delete(selected.getIdItem());
+        loadItems();
+    }
+
+    // ================= UPDATE =================
+    @FXML
+    private void modifierItem() {
+        Item selected = tableItem.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            showAlert("Veuillez sélectionner un item !");
+            return;
+        }
+
+        if (!validerChamps()) return;
+
+        selected.setLibelle(tfLibelle.getText());
+        selected.setMontant(Double.parseDouble(tfMontant.getText()));
+        selected.setCategorie(cbCategorie.getValue());
+
+        itemService.Update(selected);
+        loadItems();
+    }
+
+    // ================= VALIDATION =================
+    private boolean validerChamps() {
+
+        if (tfLibelle.getText().isEmpty()
+                || tfMontant.getText().isEmpty()
+                || cbCategorie.getValue() == null) {
+
+            showAlert("Tous les champs sont obligatoires !");
+            return false;
+        }
+
+        try {
+            Double.parseDouble(tfMontant.getText());
+        } catch (NumberFormatException e) {
+            showAlert("Le montant doit être numérique !");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void clearFields() {
+        tfLibelle.clear();
+        tfMontant.clear();
+        cbCategorie.setValue(null);
+    }
+
+    private void showAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setContentText(msg);
+        alert.show();
+    }
 }

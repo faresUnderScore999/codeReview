@@ -1,148 +1,143 @@
-package org.example.Controlleurs.BudgetControlleur;
+package org.example.Controller.BudgetController;
 
-import javafx.scene.control.Alert;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import org.example.Model.Budget.Categorie;
 import org.example.Service.BudgetService.BudgetService;
 
 public class CategorieController {
 
-    private BudgetService categorieService;
+    // 🔹 Services
+    private final BudgetService budgetService = new BudgetService();
+    private final ObservableList<Categorie> categorieList = FXCollections.observableArrayList();
 
-//    public CategorieController() {
-//        categorieService = new BudgetService();
-//    }
+    // 🔹 FXML (inputs)
+    @FXML
+    private TextField tfNomCategorie;
 
-    /**
-     * Crée une catégorie avec validation des saisies et alertes JavaFX
-     */
-//    public Categorie creerCategorie(String nomCategorie, double budgetPrevu, double seuilAlerte) {
+    @FXML
+    private TextField tfBudgetPrevu;
 
-//        // --------- CONTROLES DE SAISIE ---------
-//        if (nomCategorie == null || nomCategorie.trim().isEmpty()) { //trim c enlever tous les espaces au debut et a la fin de la chaine
-//            showError("Nom obligatoire", "Le nom de la catégorie est obligatoire !");
-//            return null;
-//        }
-//
-//        if (budgetPrevu < 0) {
-//            showError("Budget invalide", "Le budget prévu ne peut pas être négatif !");
-//            return null;
-//        }
-//
-//        if (seuilAlerte < 0) {
-//            showError("Seuil invalide", "Le seuil d'alerte ne peut pas être négatif !");
-//            return null;
-//        }
-//
-//        if (seuilAlerte > budgetPrevu) {
-//            showError("Seuil trop élevé", "Le seuil d'alerte ne peut pas dépasser le budget prévu !");
-//            return null;
-//        }
-//
-//        // --------- CREATION DE L'OBJET ---------
-//        Categorie cat = new Categorie(nomCategorie, budgetPrevu, seuilAlerte);
-//
-//        // --------- ENREGISTREMENT EN BASE VIA SERVICE ---------
-//        if (categorieService.Add(cat)) {
-//            showSuccess("Succès", "Catégorie créée avec succès !");
-//            return cat;
-//        } else {
-//            showError("Erreur", "Erreur lors de la création de la catégorie en base !");
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * Modification du budget prévu
-//     */
-//    public boolean modifierBudget(Categorie cat, double nouveauBudget) {
-//        if (cat == null) {
-//            showError("Erreur", "Aucune catégorie sélectionnée !");
-//            return false;
-//        }
-//
-//        if (nouveauBudget < 0) {
-//            showError("Budget invalide", "Le budget ne peut pas être négatif !");
-//            return false;
-//        }
-//
-//        if (cat.getSeuilAlerte() > nouveauBudget) {
-//            showError("Seuil trop élevé", "Le seuil d'alerte dépasse le nouveau budget !");
-//            return false;
-//        }
-//
-//        cat.setBudgetPrevu(nouveauBudget);
-//
-//        if (categorieService.update(cat)) {
-//            showSuccess("Succès", "Budget modifié avec succès !");
-//            return true;
-//        } else {
-//            showError("Erreur", "Erreur lors de la modification du budget !");
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * Modification du seuil d'alerte
-//     */
-//    public boolean modifierSeuilAlerte(Categorie cat, double nouveauSeuil) {
-//        if (cat == null) {
-//            showError("Erreur", "Aucune catégorie sélectionnée !");
-//            return false;
-//        }
-//
-//        if (nouveauSeuil < 0) {
-//            showError("Seuil invalide", "Le seuil d'alerte ne peut pas être négatif !");
-//            return false;
-//        }
-//
-//        if (nouveauSeuil > cat.getBudgetPrevu()) {
-//            showError("Seuil trop élevé", "Le seuil d'alerte ne peut pas dépasser le budget !");
-//            return false;
-//        }
-//
-//        cat.setSeuilAlerte(nouveauSeuil);
-//
-//        if (categorieService.update(cat)) {
-//            showSuccess("Succès", "Seuil d'alerte modifié avec succès !");
-//            return true;
-//        } else {
-//            showError("Erreur", "Erreur lors de la modification du seuil !");
-//            return false;
-//        }
-//    }
-//
-//    /**
-//     * Suppression d'une catégorie
-//     */
-//    public boolean supprimerCategorie(Categorie cat) {
-//        if (cat == null) {
-//            showError("Erreur", "Aucune catégorie sélectionnée !");
-//            return false;
-//        }
-//
-//        if (categorieService.delete(cat.getIdCategorie())) {
-//            showSuccess("Succès", "Catégorie supprimée avec succès !");
-//            return true;
-//        } else {
-//            showError("Erreur", "Erreur lors de la suppression de la catégorie !");
-//            return false;
-//        }
-//    }
-//
-//    // --------- Méthodes utilitaires pour alertes ---------
-//    private void showError(String title, String message) {
-//        Alert alert = new Alert(Alert.AlertType.ERROR);//Alert est une fenêtre pop-up fournie par JavaFX indique qu'il ya une erreur
-//        alert.setTitle(title);
-//        alert.setHeaderText(null);
-//        alert.setContentText(message);
-//        alert.showAndWait();
-//    }
-//
-//    private void showSuccess(String title, String message) {
-//        Alert alert = new Alert(Alert.AlertType.INFORMATION);//fenetre indiquant que la categorie ajoute avec succes
-//        alert.setTitle(title);
-//        alert.setHeaderText(null);
-//        alert.setContentText(message);
-//        alert.showAndWait();
-//    }
+    @FXML
+    private TextField tfSeuilAlerte;
+
+    // 🔹 TableView
+    @FXML
+    private TableView<Categorie> tableCategorie;
+
+    @FXML
+    private TableColumn<Categorie, String> colNom;
+
+    @FXML
+    private TableColumn<Categorie, Double> colBudget;
+
+    @FXML
+    private TableColumn<Categorie, Double> colSeuil;
+
+    // ================= INIT =================
+    @FXML
+    public void initialize() {
+        colNom.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(data.getValue().getNomCategorie()));
+
+        colBudget.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getBudgetPrevu()));
+
+        colSeuil.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getSeuilAlerte()));
+
+        loadData();
+    }
+
+    // ================= LOAD =================
+    private void loadData() {
+        categorieList.setAll(budgetService.ReadAll());
+        tableCategorie.setItems(categorieList);
+    }
+
+    // ================= ADD =================
+    @FXML
+    private void ajouterCategorie() {
+
+        if (!validerChamps()) return;
+
+        Categorie c = new Categorie();
+        c.setNomCategorie(tfNomCategorie.getText());
+        c.setBudgetPrevu(Double.parseDouble(tfBudgetPrevu.getText()));
+        c.setSeuilAlerte(Double.parseDouble(tfSeuilAlerte.getText()));
+
+        budgetService.Add(c);
+        loadData();
+        clearFields();
+    }
+
+    // ================= DELETE =================
+    @FXML
+    private void supprimerCategorie() {
+        Categorie selected = tableCategorie.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            showAlert("Veuillez sélectionner une catégorie !");
+            return;
+        }
+
+        budgetService.Delete(selected.getIdCategorie());
+        loadData();
+    }
+
+    // ================= UPDATE =================
+    @FXML
+    private void modifierCategorie() {
+        Categorie selected = tableCategorie.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            showAlert("Veuillez sélectionner une catégorie !");
+            return;
+        }
+
+        if (!validerChamps()) return;
+
+        selected.setNomCategorie(tfNomCategorie.getText());
+        selected.setBudgetPrevu(Double.parseDouble(tfBudgetPrevu.getText()));
+        selected.setSeuilAlerte(Double.parseDouble(tfSeuilAlerte.getText()));
+
+        budgetService.Update(selected);
+        loadData();
+    }
+
+    // ================= VALIDATION =================
+    private boolean validerChamps() {
+
+        if (tfNomCategorie.getText().isEmpty()
+                || tfBudgetPrevu.getText().isEmpty()
+                || tfSeuilAlerte.getText().isEmpty()) {
+
+            showAlert("Tous les champs sont obligatoires !");
+            return false;
+        }
+
+        try {
+            Double.parseDouble(tfBudgetPrevu.getText());
+            Double.parseDouble(tfSeuilAlerte.getText());
+        } catch (NumberFormatException e) {
+            showAlert("Budget et seuil doivent être numériques !");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void clearFields() {
+        tfNomCategorie.clear();
+        tfBudgetPrevu.clear();
+        tfSeuilAlerte.clear();
+    }
+
+    private void showAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setContentText(msg);
+        alert.show();
+    }
 }
