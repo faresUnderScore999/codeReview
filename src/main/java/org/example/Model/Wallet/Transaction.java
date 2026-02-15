@@ -114,4 +114,18 @@ public class Transaction {
 
         return idTransaction == that.idTransaction;
     }
+
+    public static String SQLTable(){
+        return """
+                CREATE TABLE transaction (
+                    id_transaction INT PRIMARY KEY AUTO_INCREMENT,
+                    montant DOUBLE NOT NULL,
+                    type VARCHAR(20) NOT NULL,
+                    date_transaction DATETIME NOT NULL,
+                    id_wallet INT NOT NULL,
+                    FOREIGN KEY (id_wallet) REFERENCES wallet(id_wallet)
+                        ON DELETE CASCADE
+                );
+                """;
+    }
 }

@@ -2,6 +2,8 @@ package org.example.Utils;
 
 import org.example.Model.Product.ClassProduct.ProductSubscription;
 import org.example.Model.Product.ClassProduct.Product;
+import org.example.Model.Wallet.Transaction;
+import org.example.Model.Wallet.Wallet;
 
 
 import java.sql.Connection;
@@ -52,6 +54,12 @@ public class MaConnexion {
 
                 //PRODUCT SUBSCRIPTION TABLE
                 st.executeUpdate(ProductSubscription.SQLTable());
+
+                //Transaction TABLE
+                st.executeUpdate(Transaction.SQLTable());
+
+                //Wallet TABLE
+                st.executeUpdate(Wallet.SQLTable());
 
                 System.out.println("Tables checked/created successfully.");
 

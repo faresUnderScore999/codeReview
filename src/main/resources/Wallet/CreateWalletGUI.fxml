@@ -6,11 +6,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import java.lang.String?>
 <AnchorPane prefHeight="600.0" prefWidth="800.0"
             stylesheets="/Styles/StyleWallet.css"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.Controlleurs.WalletController.WalletManagerGUI">
+            fx:controller="org.example.Controlleurs.WalletControlleur.WalletManagerGUI">
 
     <!-- HEADER -->
     <VBox alignment="CENTER"

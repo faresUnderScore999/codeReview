@@ -66,7 +66,12 @@ public class MenuGUIController implements Initializable {
      */
     @FXML
     private void goToWallet() {
-
+        try {
+            navigateToScene("/Wallet/CreateWalletGUI.fxml", "Gestion des Wallets");
+        } catch (IOException e) {
+            showErrorAlert("Erreur de Navigation",
+                    "Impossible d'accéder au module Gestion Wallets.\n" + e.getMessage());
+        }
     }
 
     /**
@@ -77,25 +82,7 @@ public class MenuGUIController implements Initializable {
 
     }
 
-    /**
-     * Navigate to Settings
-     */
-    @FXML
-    private void goToSettings() {
-
-    }
-
-    /**
-     * Logout functionality
-     */
-    @FXML
-    private void logout() {
-
-    }
-
-    /**
-     * Generic method to navigate to a scene
-     */
+    //Generic method to navigate to a scene
     private void navigateToScene(String fxmlPath, String title) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent root = loader.load();
@@ -108,9 +95,7 @@ public class MenuGUIController implements Initializable {
         stage.show();
     }
 
-    /**
-     * Show error alert
-     */
+    //Show error alert
     private void showErrorAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
