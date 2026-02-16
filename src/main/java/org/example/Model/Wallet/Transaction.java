@@ -117,7 +117,7 @@ public class Transaction {
 
     public static String SQLTable(){
         return """
-                CREATE TABLE transaction (
+                CREATE TABLE IF NOT EXISTS transaction (
                     id_transaction INT PRIMARY KEY AUTO_INCREMENT,
                     montant DECIMAL(15,2) NOT NULL,
                     type ENUM('DEBIT','CREDIT') NOT NULL,

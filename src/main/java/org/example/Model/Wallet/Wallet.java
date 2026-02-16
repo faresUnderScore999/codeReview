@@ -117,7 +117,7 @@ public class Wallet {
 
     public static String SQLTable(){
         return """
-                CREATE TABLE wallet (
+                CREATE TABLE IF NOT EXISTS wallet (
                     id_wallet INT PRIMARY KEY AUTO_INCREMENT,
                     nom_proprietaire VARCHAR(100) NOT NULL,
                     solde DECIMAL(15,2) NOT NULL DEFAULT 0.00,

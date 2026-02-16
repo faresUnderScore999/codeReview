@@ -59,6 +59,26 @@ public class ProductSubscriptionService implements InterfaceGlobal<ProductSubscr
         }
     }
 
+    public boolean update(ProductSubscription p) {
+        String req = "UPDATE `ProductSubscription` SET type = ?,Client=?, Product=?, subscriptionDate=?, expirationDate = ?, status = ? WHERE subscriptionId = ?";
+        try {
+            PreparedStatement ps = cnx.prepareStatement(req);
+            ps.setString(1, p.getType().name());
+            ps.setInt(2, p.getClient());
+            ps.setInt(3, p.getProduct());
+            ps.setTimestamp(4, Timestamp.valueOf(p.getSubscriptionDate()));
+            ps.setTimestamp(5, Timestamp.valueOf(p.getExpirationDate()));
+            ps.setString(6, p.getStatus().name());
+            ps.setInt(7, p.getSubscriptionId());
+            ps.executeUpdate();
+            System.out.println("ProduitSubscription changée avec succes");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     @Override
     public void Delete(Integer id) {
         String req = "DELETE FROM `ProductSubscription` WHERE subscriptionId = ?";
@@ -69,6 +89,20 @@ public class ProductSubscriptionService implements InterfaceGlobal<ProductSubscr
             System.out.println("ProductSubscription Supprimer avec succes");
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+    public boolean delete(Integer id) {
+        String req = "DELETE FROM `ProductSubscription` WHERE subscriptionId = ?";
+        try {
+            PreparedStatement ps = cnx.prepareStatement(req);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            System.out.println("ProductSubscription Supprimer avec succes");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+
         }
     }
 
@@ -125,6 +159,7 @@ public class ProductSubscriptionService implements InterfaceGlobal<ProductSubscr
         return null;
     }
 
+
     public List<ProductSubscription> getParClient(int clientId) {
         List<ProductSubscription> products = new ArrayList<>();
 
@@ -156,11 +191,75 @@ public class ProductSubscriptionService implements InterfaceGlobal<ProductSubscr
 
         return products;
     }
+    public List<String> getAllProductsForDisplay() {
 
+        List<String> products = new ArrayList<>();
 
+        String req = "SELECT productId, category, description, price " +
+                "FROM product ORDER BY category, description";
 
+        try (PreparedStatement ps = cnx.prepareStatement(req);
+             ResultSet rs = ps.executeQuery()) {
 
+            while (rs.next()) {
 
+                int id = rs.getInt("productId");
+                String category = rs.getString("category");
+                String desc = rs.getString("description");
+                double price = rs.getDouble("price");
 
+                String display = String.format(
+                        "#%d | %s - %s (%.2f DT)",
+                        id, category, desc, price
+                );
 
+                products.add(display);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return products;
+    }
+
+    public int extractProductIdFromDisplay(String displayString) {
+        if (displayString == null || !displayString.startsWith("#")) {
+            return -1;
+        }
+
+        try {
+            String[] parts = displayString.split("\\|");
+            String idPart = parts[0].replace("#", "").trim();
+            return Integer.parseInt(idPart);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    public ProductCategory getProductName(int subscriptionId) {
+        String req = """
+                        SELECT p.category
+                        FROM productsubscription ps
+                        JOIN product p ON ps.product = p.productId
+                        WHERE ps.subscriptionId = ?
+                    """;
+
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+
+            ps.setInt(1, subscriptionId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+                    return ProductCategory.valueOf(rs.getString("category"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

@@ -5,6 +5,8 @@ import org.example.Model.Product.ClassProduct.ProductSubscription;
 import org.example.Model.Product.ClassProduct.Product;
 import org.example.Model.Wallet.Transaction;
 import org.example.Model.Wallet.Wallet;
+import org.example.Model.Loan.LoanClass.Loan;
+import org.example.Model.Loan.LoanClass.Repayment;
 
 
 import java.sql.Connection;
@@ -59,11 +61,17 @@ public class MaConnexion {
                 //Categorie TABLE
                 st.executeUpdate(Categorie.SQLTable());
 
+                //Wallet TABLE
+                st.executeUpdate(Wallet.SQLTable());
                 //Transaction TABLE
                 st.executeUpdate(Transaction.SQLTable());
 
-                //Wallet TABLE
-                st.executeUpdate(Wallet.SQLTable());
+                //Loan Table
+                st.executeUpdate(Loan.SQLTable());
+
+                //Repayment Table
+                st.executeUpdate(Repayment.SQLTable());
+
 
                 System.out.println("Tables checked/created successfully.");
 

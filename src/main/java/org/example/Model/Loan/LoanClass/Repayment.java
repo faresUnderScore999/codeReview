@@ -122,4 +122,23 @@ public class Repayment {
                 ", status=" + status +
                 '}';
     }
+
+    public static String SQLTable() {
+        return """
+                CREATE TABLE IF NOT EXISTS repayment (
+                   repayId INT PRIMARY KEY AUTO_INCREMENT,
+                   loanId INT NOT NULL,
+                   number INT NOT NULL,
+                   amount DECIMAL(10,2) NOT NULL,
+                   capitalPart DECIMAL(10,2) NOT NULL,
+                   interestPart DECIMAL(10,2) NOT NULL,
+                   status VARCHAR(20) NOT NULL,
+
+                   CONSTRAINT fk_repayment_loan
+                   FOREIGN KEY (loanId)
+                   REFERENCES loan(loanId)
+                   ON DELETE CASCADE
+               );
+                """;
+    }
 }
