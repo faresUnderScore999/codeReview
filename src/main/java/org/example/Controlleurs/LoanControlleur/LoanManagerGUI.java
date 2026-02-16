@@ -200,7 +200,6 @@ public class LoanManagerGUI implements Initializable {
 
     private void handleDelete(Loan loan) {
 
-        // 🔴 Prevent deleting active loan
         if (loan.getStatus() == LoanStatus.ACTIVE) {
             showError("Impossible de supprimer un prêt actif.");
             return;

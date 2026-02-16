@@ -38,6 +38,10 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
+            <Button text="➕ Ajouter"
+                    styleClass="btn-primary"
+                    onAction="#goToAddRepayment"/>
+
         </HBox>
 
         <!-- TABLE CONTAINER -->

@@ -201,6 +201,27 @@ public class RepaymentListController {
             loadData();
         }
     }
+    @FXML
+    private void goToAddRepayment() {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/Loan/CreateRepayment.fxml")
+            );
+
+            Parent root = loader.load();
+
+            CreateRepaymentController controller = loader.getController();
+            controller.setLoanId(loanId);
+
+            Stage stage = (Stage) repaymentTable.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Ajouter remboursement");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // ======================
     // BACK TO LOAN LIST
