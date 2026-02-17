@@ -32,7 +32,7 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <Button text="+ Ajouter"
+            <Button text="➕ Ajouter"
                     styleClass="btn-primary"
                     onAction="#goToAddRepayment"/>
         </HBox>
