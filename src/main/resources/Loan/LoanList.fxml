@@ -10,6 +10,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.text.Font?>
 <AnchorPane prefHeight="600.0" prefWidth="1000.0"
             stylesheets="@/Styles/LoanStyle.css"
             xmlns="http://javafx.com/javafx/17"
@@ -18,7 +19,11 @@
 
     <VBox spacing="20" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
           AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
-
+        <Button onAction="#goBackToMenu" prefWidth="120.0" styleClass="btn-back" text="⬅ Retour">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Button>
         <padding>
             <Insets top="30" left="30" right="30" bottom="30"/>
         </padding>

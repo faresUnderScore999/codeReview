@@ -65,7 +65,7 @@ public class Main {
 //
 //        BS.Add(c);
 
-        ProductSubscription PS = new ProductSubscription(1,9, SubscriptionType.ANNUAL);
+        ProductSubscription PS = new ProductSubscription(1,29, SubscriptionType.MONTHLY);
         ProductSubscriptionService sps = new ProductSubscriptionService();
 
         sps.Add(PS);
