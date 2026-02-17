@@ -118,8 +118,8 @@ public class LoanManagerGUI implements Initializable {
 
     private void setupButtons() {
 
-        colUpdate.setCellFactory(getButtonCell("Modifier", "btn-update", true));
-        colDelete.setCellFactory(getButtonCell("Supprimer", "btn-delete", false));
+        colUpdate.setCellFactory(getButtonCell("⚙", "btn-update", true));
+        colDelete.setCellFactory(getButtonCell("❌", "btn-delete", false));
 
         colRepayments.setCellFactory(param -> new TableCell<>() {
 
