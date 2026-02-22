@@ -253,7 +253,7 @@ public class CategorieListeController implements Initializable {
     public void goListeItem(ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(
-                    getClass().getResource("/Budget/ItemGUI.fxml")
+                    getClass().getResource("/Budget/ItemListGUI.fxml")
             );
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

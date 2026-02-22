@@ -1,6 +1,7 @@
 package org.example.Utils;
 
 import org.example.Model.Budget.Categorie;
+import org.example.Model.Budget.Item;
 import org.example.Model.Product.ClassProduct.ProductSubscription;
 import org.example.Model.Product.ClassProduct.Product;
 import org.example.Model.Wallet.Transaction;
@@ -60,6 +61,8 @@ public class MaConnexion {
 
                 //Categorie TABLE
                 st.executeUpdate(Categorie.SQLTable());
+                //Item TABLE
+                st.executeUpdate(Item.SQLTable());
 
                 //Wallet TABLE
                 st.executeUpdate(Wallet.SQLTable());
