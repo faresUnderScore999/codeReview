@@ -102,4 +102,25 @@ public class BudgetService implements InterfaceGlobal<Categorie> {
         }
         return null;
     }
+
+    // Helper methods that return boolean for controllers
+    public boolean delete(int id) {
+        try {
+            Delete(id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean update(Categorie c) {
+        try {
+            Update(c);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

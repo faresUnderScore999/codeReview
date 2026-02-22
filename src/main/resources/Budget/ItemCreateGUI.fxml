@@ -6,7 +6,7 @@
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.Controlleurs.BudgetControlleur.ItemCreateController"
-            prefWidth="900" prefHeight="600"
+            prefWidth="1375" prefHeight="720"
             stylesheets="/Styles/StyleBudget.css"
             styleClass="main-container">
 
@@ -63,7 +63,7 @@
 
                 <!-- Prix -->
                 <VBox spacing="8" styleClass="input-group">
-                    <Label text="Prix Unitaire (DT) *" styleClass="input-label"/>
+                    <Label text="Prix  (DT) *" styleClass="input-label"/>
                     <HBox spacing="10" alignment="CENTER_LEFT">
                         <TextField fx:id="tfMontant" promptText="0.00" styleClass="input-field"/>
                         <Label text="DT" styleClass="currency-label"/>
