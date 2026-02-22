@@ -204,7 +204,7 @@ public class CategorieListeController implements Initializable {
 
         Optional<ButtonType> result = confirmAlert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            if (BS.Delete(categorie.getIdCategorie())) {
+            if (BS.delete(categorie.getIdCategorie())) {
                 showSuccessAlert("Succès", "La catégorie a été supprimée avec succès!");
                 loadCategories();
             } else {
@@ -216,7 +216,7 @@ public class CategorieListeController implements Initializable {
     @FXML
     private void goBackToMenu() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Menu.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MenuGUI.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) categorieListView.getScene().getWindow();
@@ -228,6 +228,25 @@ public class CategorieListeController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
             showErrorAlert("Erreur", "Impossible de retourner au menu.");
+        }
+    }
+
+    // Open Item list filtered by category
+    private void openItemsForCategory(Categorie categorie) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Budget/ItemListGUI.fxml"));
+            Parent root = loader.load();
+
+            ItemListController controller = loader.getController();
+            controller.loadItemsForCategory(categorie);
+
+            Stage stage = (Stage) categorieListView.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Items de la catégorie: " + categorie.getNomCategorie());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorAlert("Erreur", "Impossible d'ouvrir la liste des items pour cette catégorie.");
         }
     }
 
@@ -397,8 +416,14 @@ public class CategorieListeController implements Initializable {
 //                }
 
                 // Set button actions
-                updateButton.setOnAction(e -> goToUpdate(categorie));
-                deleteButton.setOnAction(e -> deleteCategorie(categorie));
+                    updateButton.setOnAction(e -> goToUpdate(categorie));
+                    deleteButton.setOnAction(e -> deleteCategorie(categorie));
+
+                    // Click on the card (except buttons) opens the items list for this category
+                    container.setOnMouseClicked(e -> {
+                        if (e.getTarget() instanceof Button) return;
+                        openItemsForCategory(categorie);
+                    });
 
                 setGraphic(container);
             }

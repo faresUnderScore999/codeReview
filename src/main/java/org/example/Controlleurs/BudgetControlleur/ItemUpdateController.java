@@ -2,7 +2,10 @@ package org.example.Controlleurs.BudgetControlleur;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.example.Model.Budget.Item;
@@ -10,6 +13,7 @@ import org.example.Model.Budget.Categorie;
 import org.example.Service.BudgetService.ItemService;
 import org.example.Service.BudgetService.BudgetService;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -139,11 +143,37 @@ public class ItemUpdateController implements Initializable {
         return isValid;
     }
 
+
     @FXML
     private void closeWindow() {
         Stage stage = (Stage) tfNomItem.getScene().getWindow();
-        stage.close();
+        // If this was opened as a dialog (has an owner) just close it
+        if (stage.getOwner() != null) {
+            stage.close();
+            return;
+        }
+
+        // Otherwise navigate back to the Item list scene
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Budget/ItemListGUI.fxml"));
+            Parent root = loader.load();
+
+            ItemListController controller = loader.getController();
+            if (currentItem != null && currentItem.getCategorie() != null) {
+                controller.loadItemsForCategory(currentItem.getCategorie());
+            } else {
+                controller.loadItems();
+            }
+
+            stage.setScene(new Scene(root));
+            stage.setTitle("Liste des Items");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorAlert("Erreur", "Impossible de retourner à la liste des items.");
+        }
     }
+
 
     @FXML
     private void DeleteItem() {

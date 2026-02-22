@@ -1,10 +1,14 @@
 package org.example.Controlleurs.BudgetControlleur;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import java.io.IOException;
 import org.example.Model.Budget.Categorie;
 import org.example.Service.BudgetService.BudgetService;
 
@@ -104,6 +108,30 @@ public class CategorieCreateController {
 
     private void closeWindow() {
         Stage stage = (Stage) btnAnnuler.getScene().getWindow();
-        stage.close();
+        // If this window has an owner, it's a dialog/window opened over the primary stage -> close it.
+        // If it has no owner (i.e. primary stage), navigate back to the categories list instead
+        if (stage.getOwner() != null) {
+            stage.close();
+        } else {
+            goBackToListe();
+        }
+    }
+
+    @FXML
+    private void goBackToListe() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Budget/CategorieListeGUI.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) tfNomCategorie.getScene().getWindow();
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            stage.setTitle("Liste des Catégories");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de retourner à la liste.");
+        }
     }
 }
