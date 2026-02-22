@@ -3,13 +3,11 @@ package org.example.Controlleurs.BudgetControlleur;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -206,7 +204,7 @@ public class CategorieListeController implements Initializable {
 
         Optional<ButtonType> result = confirmAlert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            if (BS.delete(categorie.getIdCategorie())) {
+            if (BS.Delete(categorie.getIdCategorie())) {
                 showSuccessAlert("Succès", "La catégorie a été supprimée avec succès!");
                 loadCategories();
             } else {
@@ -218,7 +216,7 @@ public class CategorieListeController implements Initializable {
     @FXML
     private void goBackToMenu() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MenuGUI.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Menu.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) categorieListView.getScene().getWindow();
@@ -248,21 +246,6 @@ public class CategorieListeController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    public void goListeItem(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(
-                    getClass().getResource("/Budget/ItemListGUI.fxml")
-            );
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Liste Items");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     // ==================== Custom ListView Cell ====================

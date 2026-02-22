@@ -70,7 +70,7 @@ public class Categorie {
         this.items = items;
     }
 
-    // ✅ IMPORTANT : affichage dans ComboBox
+    // affichage dans ComboBox
     @Override
     public String toString() {
         return nomCategorie;
